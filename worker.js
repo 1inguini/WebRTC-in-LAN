@@ -1,9 +1,13 @@
-// Copyright (c) 2017-2023 Cloudflare, Inc.
-// Licensed under the Apache 2.0 license found in the LICENSE file or at:
-//     https://opensource.org/licenses/Apache-2.0
+import { Hono } from "hono";
 
+const app = new Hono();
+
+app.get("/", (c) => c.text("Hello Cloudflare Workers!"));
+
+// クラスをそのままexportできない
+// https://github.com/cloudflare/workerd/issues/699
 export default {
-  async fetch(req, env) {
-    return new Response("Hello World\n");
-  }
+  async fetch(req, env, ctx) {
+    return app.fetch(req, env, ctx);
+  },
 };

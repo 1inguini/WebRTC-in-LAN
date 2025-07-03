@@ -1,0 +1,24 @@
+{
+  "name": "webrtc-in-lan",
+  "version": "0.0.0",
+  "description": "サーバーと同一ネットワークにあるデバイス同士をWebRTCで接続するWebサイト",
+  "homepage": "https://github.com/1inguini/WebRTC-in-LAN#readme",
+  "bugs": {
+    "url": "https://github.com/1inguini/WebRTC-in-LAN/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/1inguini/WebRTC-in-LAN.git"
+  },
+  "license": "Apache-2.0",
+  "author": "1inguini",
+  "type": "module",
+  "scripts": {
+    "build": "esbuild --bundle worker.js --outdir=dist --platform=neutral",
+    "test": "workerd serve config.capnp"
+  },
+  "dependencies": {
+    "esbuild": "^0.25.5",
+    "hono": "^4.8.3"
+  }
+}
