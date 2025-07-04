@@ -1,25 +1,41 @@
-// import { Hono } from "hono";
+import { Hono } from "hono";
+import { serveStatic } from "hono/serve-static";
+import mimeDB from "mime-db/db.json";
 
-// const app = new Hono();
+const app = new Hono();
 
-// app.get("/", (c) => c.text("Hello Cloudflare Workers!"));
-// app.get("/:client", (c) => {
-//   const { client } = c.req.param();
-//   c.header("X-Message", "Hi!");
-//   return c.text(`You want to see ${page} of ${id}`);
-// });
+const extDB = {};
+for (const [mime, v] of Object.entries(mimeDB)) {
+  for (const ext of v.extensions ?? []) {
+    extDB[ext] ??= {
+      contentType: v.charset
+        ? `${mime};charset=${v.charset.toLowerCase()}`
+        : mime,
+      ...v,
+    };
+  }
+}
 
-import * as app from "@cloudflare/workers-shared";
+app.use(
+  serveStatic({
+    getContent: async (path, ctx) => {
+      const { body } = await ctx.env.files.fetch(ctx.req.raw);
+      const res = new Response(body, {
+        headers: {
+          "Content-Type":
+            extDB[path.split(".").pop()].contentType ??
+            "application/octet-stream",
+        },
+      });
+      return res;
+    },
+  }),
+);
+
+// クラスをそのままexportできない
+// https://github.com/cloudflare/workerd/issues/699
 export default {
   async fetch(req, env, ctx) {
     return app.fetch(req, env, ctx);
   },
 };
-
-// // クラスをそのままexportできない
-// // https://github.com/cloudflare/workerd/issues/699
-// export default {
-//   async fetch(req, env, ctx) {
-//     return app.fetch(req, env, ctx);
-//   },
-// };

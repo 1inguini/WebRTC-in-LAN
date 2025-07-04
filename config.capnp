@@ -9,7 +9,7 @@ const config :Workerd.Config = (
 );
 
 const worker :Workerd.Worker = (
-  compatibilityDate = "2025-06-16",
+  compatibilityDate = "2025-07-01",
 
   modules = [
     (name = "worker", esModule = embed "dist/worker.js"),

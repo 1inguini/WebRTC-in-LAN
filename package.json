@@ -14,21 +14,18 @@
   "author": "1inguini",
   "type": "module",
   "scripts": {
-    "build": "esbuild --bundle worker.js --outdir=dist --format=esm",
+    "build": "esbuild worker.js --bundle --outdir=dist --platform=neutral --format=esm --sourcemap",
     "serve": "workerd serve config.capnp",
     "dev": "execlineb -Pc 'background { npm run build -- --watch } background { npm run serve -- --watch } wait'"
   },
-  "main": "worker.js",
   "devDependencies": {
-    "build-worker": "^0.2.2",
     "esbuild": "^0.25.5"
   },
   "dependencies": {
-    "@cloudflare/workers-shared": "^0.17.5",
-    "hono": "^4.8.3"
+    "hono": "^4.8.3",
+    "mime-db": "^1.54.0"
   },
   "bundleDependencies": [
-    "@cloudflare/workers-shared",
     "hono"
   ]
 }
