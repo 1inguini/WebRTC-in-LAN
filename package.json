@@ -22,8 +22,7 @@
     "esbuild": "^0.25.5"
   },
   "dependencies": {
-    "hono": "^4.8.3",
-    "mime-db": "^1.54.0"
+    "hono": "^4.8.3"
   },
   "bundleDependencies": [
     "hono"
