@@ -15,7 +15,8 @@
   "type": "module",
   "scripts": {
     "build": "esbuild --bundle worker.js --outdir=dist --platform=neutral",
-    "test": "workerd serve config.capnp"
+    "dev": "esbuild --bundle worker.js --outdir=dist --platform=neutral --watch=forever & workerd serve --watch config.capnp",
+    "serve": "workerd serve config.capnp"
   },
   "dependencies": {
     "esbuild": "^0.25.5",
