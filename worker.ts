@@ -2,12 +2,7 @@ import { Context, Hono } from "hono";
 import { logger } from "hono/logger";
 import { appendTrailingSlash } from "hono/trailing-slash";
 import { serveStatic } from "hono/serve-static";
-import type {
-  Fetcher,
-  ExportedHandler,
-  Request as CFRequest,
-  Response as CFResponse,
-} from "@cloudflare/workers-types";
+import type { Fetcher } from "@cloudflare/workers-types";
 
 type WorkerEnv = {
   Bindings: {
@@ -20,8 +15,8 @@ app.use(logger());
 app.use(appendTrailingSlash());
 app.use(
   serveStatic<WorkerEnv>({
-    getContent: async (path, ctx: Context<WorkerEnv>) => {
-      const res = await ctx.env.files.fetch(new URL(ctx.req.url));
+    async getContent(path, ctx: Context<WorkerEnv>) {
+      const res = await ctx.env.files.fetch(new URL(ctx.req.url)); // pathだと頭に"/"がついてなくてコケる
       return res.bytes();
     },
   }),
