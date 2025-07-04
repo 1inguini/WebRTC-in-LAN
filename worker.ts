@@ -27,15 +27,4 @@ app.use(
   }),
 );
 
-// クラスをそのままexportできない
-// https://github.com/cloudflare/workerd/issues/699
-const worker: ExportedHandler<WorkerEnv> = {
-  async fetch(req, env, ctx) {
-    return (await app.fetch(
-      new Request(req.url, req as CFRequest & Request),
-      env,
-      ctx,
-    )) as CFResponse & Response;
-  },
-};
-export default worker;
+export default app;
