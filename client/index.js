@@ -3,6 +3,42 @@ const m = navigator.mediaDevices;
 
 const main = $("main");
 
+const streams = [{ audio: {} }, { video: {} }].map(async (constraint) => {
+  try {
+    const stream = m.getUserMedia(constraint);
+    console.info("Got MediaStream:", stream, "for", constraint);
+    return stream;
+  } catch (e) {
+    console.info("Error accessing device", e, "for", constraint);
+  }
+});
+
+console.info("MediaStreams:", streams);
+
+for (const promiseS of streams) {
+  try {
+    const s = await promiseS;
+    $("li.media-streams").innerText = `MediaStream: ${s.id}`;
+    const ul = document.createElement("ul");
+    for (const t of s.getTracks()) {
+      console.info("Got MediaStreamTrack:", t);
+      ul.innerHTML += `
+<li>
+  MediaStreamTrack: ${t.id}
+  <ul>kind: ${t.kind}</ul>
+  <ul>label: ${t.label}</ul>
+  <ul>muted: ${t.muted}</ul>
+  <ul>reaadyState: ${t.readyState}</ul>
+  <ul>contentHint: ${t.contentHint}</ul>
+  <ul>enabled: ${t.enabled}</ul>
+</li>
+`;
+    }
+    $("li.media-streams").appendChild(ul);
+    $("li.media-streams").removeAttribute("hidden");
+  } catch (e) {}
+}
+
 //   const devices = await m.enumerateDevices();
 //   console.log(devices);
 //   main.appendChild(
@@ -18,15 +54,3 @@ const main = $("main");
 //       return li;
 //     }, document.createElement("li")),
 //   );
-
-const streams = [{ audio: {} }, { video: {} }].map(async (constraint) => {
-  try {
-    const stream = await m.getUserMedia(constraint);
-    console.info("Got MediaStream:", stream, "for", constraint);
-    return { [type]: stream };
-  } catch (e) {
-    console.info("Error accessing device", e, "for", constraint);
-  }
-});
-
-console.info(streams);
