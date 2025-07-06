@@ -24,13 +24,10 @@ for (const promiseS of streams) {
       console.info("Got MediaStreamTrack:", t);
       ul.innerHTML += `
 <li>
-  MediaStreamTrack: ${t.id}
+  MediaStreamTrack: ${t.label}
   <ul>kind: ${t.kind}</ul>
-  <ul>label: ${t.label}</ul>
   <ul>muted: ${t.muted}</ul>
   <ul>reaadyState: ${t.readyState}</ul>
-  <ul>contentHint: ${t.contentHint}</ul>
-  <ul>enabled: ${t.enabled}</ul>
 </li>
 `;
     }
