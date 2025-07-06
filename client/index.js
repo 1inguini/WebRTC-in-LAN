@@ -19,14 +19,14 @@ const main = $("main");
 //     }, document.createElement("li")),
 //   );
 
-const [micStream, cameraStream] = [{ audio: {} }, { video: {} }].map(
-  async (constraint) => {
-    try {
-      const stream = await m.getUserMedia(constraint);
-      console.info("Got MediaStream for", constraint, ":", stream);
-      return stream;
-    } catch (e) {
-      console.info("Error accessing media devices for", constraint, ":", e);
-    }
-  },
-);
+const streams = [{ audio: {} }, { video: {} }].map(async (constraint) => {
+  try {
+    const stream = await m.getUserMedia(constraint);
+    console.info("Got MediaStream:", stream, "for", constraint);
+    return { [type]: stream };
+  } catch (e) {
+    console.info("Error accessing device", e, "for", constraint);
+  }
+});
+
+console.info(streams);
