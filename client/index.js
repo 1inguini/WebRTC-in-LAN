@@ -18,8 +18,10 @@ console.info("MediaStreams:", streams);
 for (const promiseS of streams) {
   try {
     const s = await promiseS;
-    $("li.media-streams").innerText = `MediaStream: ${s.id}`;
+    const li = document.createElement("li");
+    li.innerText = `MediaStream: ${s.id}`;
     const ul = document.createElement("ul");
+    li.appendChild(ul);
     var hasVideo = false;
     for (const t of s.getTracks()) {
       console.info("Got MediaStreamTrack:", t);
@@ -34,13 +36,13 @@ for (const promiseS of streams) {
       hasVideo ||= t.kind === "video";
     }
     if (hasVideo) {
-      ul.innerHTML += '<video autoplay playsinline nocontrols></video>'
+      ul.innerHTML += '<video muted autoplay playsinline nocontrols></video>'
     } else {
       ul.innerHTML += '<audio controls></audio>'
     }
     ul.querySelector("video, audio").srcObject = s;
-    $("li.media-streams").appendChild(ul);
-    $("li.media-streams").removeAttribute("hidden");
+    $("ul.media-streams").appendChild(li);
+    $("ul.media-streams").removeAttribute("hidden");
   } catch (e) {
     console.info(e);
   }
