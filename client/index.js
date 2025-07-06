@@ -19,12 +19,24 @@ const main = $("main");
 //     }, document.createElement("li")),
 //   );
 
-try {
-  const stream = await m.getUserMedia({
-    audio: $("input[type=checkbox].permit.microphone").checked,
-    video: $("input[type=checkbox].permit.camera").checked,
-  });
-  console.log("Got MediaStream:", stream);
-} catch (error) {
-  console.error("Error accessing media devices.", error);
+async function getShowUserMedia(constraint) {
+  try {
+    const stream = await m.getUserMedia(constraint);
+    console.info("Got MediaStream for", constraint, " : ", stream);
+    $("li.media-streams").innerHTML += `
+<ul>
+  <li class="media-stream-id-${stream.id.match(/[a-z,A-Z,0-9,-]+/)[0]}">
+    <ul>id: ${stream.id}</ul>
+    <ul>active: ${stream.active}</ul>
+    <ul>label: ${stream.label}</ul>
+  </li>
+</ul>
+`;
+    return stream;
+  } catch (e) {
+    console.info("Error accessing media devices.", e);
+  }
 }
+
+const micStream = getShowUserMedia({ audio: {} });
+const cameraStream = getShowUserMedia({ video: {} });

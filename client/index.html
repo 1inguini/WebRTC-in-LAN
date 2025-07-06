@@ -6,6 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" href="/1inguini_icon.svg" />
     <script type="module" src="./index.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/mvp.css@1.17.2/mvp.min.css"
+    />
   </head>
 
   <body>
@@ -13,13 +17,9 @@
       <h2>WebRTC in LAN</h2>
     </header>
     <main>
-      <label style="display: block">
-        <input type="checkbox" class="permit microphone" checked />
-        Capture Microphone
-      </label>
-      <label style="display: block">
-        <input type="checkbox" class="permit camera" />
-        Capture Camera
+      <label>
+        Captured inputs
+        <li class="media-streams"></li>
       </label>
     </main>
     <footer>Copyright 2025 1inguini</footer>
