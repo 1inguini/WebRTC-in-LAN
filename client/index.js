@@ -42,7 +42,6 @@ for (const promiseS of streams) {
     }
     ul.querySelector("video, audio").srcObject = s;
     $("ul.media-streams").appendChild(li);
-    $("ul.media-streams").removeAttribute("hidden");
   } catch (e) {
     console.info(e);
   }
