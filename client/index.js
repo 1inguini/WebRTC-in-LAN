@@ -1,6 +1,9 @@
-const $ = (q) => document.querySelector(q);
-const m = navigator.mediaDevices;
+[Element, Document, DocumentFragment].forEach((i) => {
+  i.prototype.$ = i.prototype.querySelector;
+});
+const $ = (q) => document.$(q);
 
+const m = navigator.mediaDevices;
 const main = $("main");
 
 const streams = [{ audio: {} }, { video: {} }].map(async (constraint) => {
