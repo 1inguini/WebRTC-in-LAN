@@ -21,29 +21,23 @@ console.info("MediaStreams:", streams);
 for (const promiseS of streams) {
   try {
     const s = await promiseS;
-    const li = document.createElement("li");
-    li.innerText = `MediaStream: ${s.id}`;
-    const ul = document.createElement("ul");
-    li.appendChild(ul);
+    const li = $("template.media-stream").content.children[0].cloneNode(true);
+    console.info("media-stream", li);
+    li.$(".media-stream.id").innerText = s.id;
     var hasVideo = false;
+    const mediaTrackLi = li.$("template.media-track").content.children[0].cloneNode(true);
     for (const t of s.getTracks()) {
       console.info("Got MediaStreamTrack:", t);
-      ul.innerHTML += `
-<li class="media-stream-track">
-  MediaStreamTrack: ${t.label}
-  <ul>kind: ${t.kind}</ul>
-  <ul>muted: ${t.muted}</ul>
-  <ul>reaadyState: ${t.readyState}</ul>
-</li>
-`;
+      mediaTrackLi.$(".media-track.label").innerText = t.label;
       hasVideo ||= t.kind === "video";
+      li.$("ul.media-tracks").appendChild(mediaTrackLi);
     }
     if (hasVideo) {
-      ul.innerHTML += '<video muted autoplay playsinline nocontrols></video>'
+      li.$("audio").remove();
     } else {
-      ul.innerHTML += '<audio controls></audio>'
+      li.$("video").remove();
     }
-    ul.querySelector("video, audio").srcObject = s;
+    li.$("video, audio").srcObject = s;
     $("ul.media-streams").appendChild(li);
   } catch (e) {
     console.info(e);
