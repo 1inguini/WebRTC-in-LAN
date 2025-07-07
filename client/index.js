@@ -1,7 +1,7 @@
 [Element, Document, DocumentFragment].forEach((i) => {
   i.prototype.$ = i.prototype.querySelector;
 });
-const $ = (q) => document.$(q);
+const $ = Document.prototype.$.bind(document);
 
 const m = navigator.mediaDevices;
 const main = $("main");
