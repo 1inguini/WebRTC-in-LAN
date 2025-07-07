@@ -25,7 +25,7 @@ async function main() {
       const mediaStream = $("#template > .media-stream").cloneNode(true);
       console.debug("media-stream", mediaStream);
       mediaStream.$(".media-stream.id").innerText = s.id;
-      var hasVideo = false;
+      let hasVideo = false;
       const mediaTrack = $("#template > .media-track").cloneNode(true);
       for (const t of s.getTracks()) {
         console.debug("Got MediaStreamTrack:", t);
