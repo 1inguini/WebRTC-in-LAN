@@ -21,41 +21,26 @@ console.info("MediaStreams:", streams);
 for (const promiseS of streams) {
   try {
     const s = await promiseS;
-    const li = $("template.media-stream").content.children[0].cloneNode(true);
-    console.info("media-stream", li);
-    li.$(".media-stream.id").innerText = s.id;
+    const mediaStream = $("#template > .media-stream").cloneNode(true);
+    console.info("media-stream", mediaStream);
+    mediaStream.$(".media-stream.id").innerText = s.id;
     var hasVideo = false;
-    const mediaTrackLi = li.$("template.media-track").content.children[0].cloneNode(true);
+    const mediaTrack = $("#template > .media-track").cloneNode(true);
     for (const t of s.getTracks()) {
       console.info("Got MediaStreamTrack:", t);
-      mediaTrackLi.$(".media-track.label").innerText = t.label;
+      mediaTrack.$(".media-track.label").innerText = t.label;
       hasVideo ||= t.kind === "video";
-      li.$("ul.media-tracks").appendChild(mediaTrackLi);
+      mediaStream.$("ul.media-tracks").appendChild(mediaTrack);
     }
     if (hasVideo) {
-      li.$("audio").remove();
+      mediaStream.$("audio").remove();
     } else {
-      li.$("video").remove();
+      mediaStream.$("video").remove();
     }
-    li.$("video, audio").srcObject = s;
-    $("ul.media-streams").appendChild(li);
+    mediaStream.$("video, audio").srcObject = s;
+    $("ul.media-streams").appendChild(mediaStream);
   } catch (e) {
     console.info(e);
   }
 }
 
-//   const devices = await m.enumerateDevices();
-//   console.log(devices);
-//   main.appendChild(
-//     devices.reduce((li, dev) => {
-//       li.innerHTML += /* html */ `
-// <ul>
-//   <li>
-//     <ul>deviceId: ${dev.deviceId}</ul>
-//     <ul>kind: ${dev.kind}</ul>
-//     <ul>label: ${dev.label}</ul>
-//   </li>
-// </ul>`;
-//       return li;
-//     }, document.createElement("li")),
-//   );

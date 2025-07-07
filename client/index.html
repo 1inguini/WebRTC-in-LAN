@@ -18,25 +18,22 @@
   <main>
     <article class="inputs-info">
       <h2>Captured inputs</h2>
-      <ul class="media-streams">
-        <template class="media-stream">
-          <li class="media-stream">
-            Media Stream: <span class="media-stream id"></span>
-            <ul class="media-tracks">
-              <template class="media-track">
-                <li class="media-track">
-                  Media Stream Track: <span class="media-track label"></span>
-                </li>
-              </template>
-            </ul>
-            <audio controls></audio>
-            <video muted autoplay playsinline nocontrols></video>
-          </li>
-        </template>
-      </ul>
+      <ul class="media-streams"></ul>
     </article>
   </main>
   <footer>Copyright 2025 1inguini</footer>
 </body>
+
+<div id="template" hidden>
+  <li class="media-stream">
+    Media Stream: <span class="media-stream id"></span>
+    <ul class="media-tracks"></ul>
+    <audio controls></audio>
+    <video muted autoplay playsinline nocontrols></video>
+  </li>
+  <li class="media-track">
+    Media Stream Track: <span class="media-track label"></span>
+  </li>
+</div>
 
 </html>
