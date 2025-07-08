@@ -3,6 +3,8 @@ async function main() {
     i.prototype.$ = i.prototype.querySelector;
   });
   const $ = Document.prototype.$.bind(document);
+  const useTemplate = (q) =>
+    document.importNode($(q.trimEnd() + ":is(template)").content, true);
 
   const m = navigator.mediaDevices;
   const main = $("main");
@@ -22,11 +24,11 @@ async function main() {
   for (const promiseS of streams) {
     try {
       const s = await promiseS;
-      const mediaStream = $("#template > .media-stream").cloneNode(true);
+      const mediaStream = useTemplate(".media-stream");
       console.debug("media-stream", mediaStream);
       mediaStream.$(".media-stream.id").innerText = s.id;
       let hasVideo = false;
-      const mediaTrack = $("#template > .media-track").cloneNode(true);
+      const mediaTrack = useTemplate(".media-track");
       for (const t of s.getTracks()) {
         console.debug("Got MediaStreamTrack:", t);
         mediaTrack.$(".media-track.label").innerText = t.label;
