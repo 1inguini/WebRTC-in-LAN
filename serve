@@ -1,0 +1,13 @@
+#!/bin/execlineb -P
+
+background {
+	caddy run
+}
+background {
+	loopwhilex -x 0
+		gst-launch-1.0
+			whipserversrc signaller::host-addr=http://localhost:8080 stun-server=stun://
+				audio-codecs=<L24,L16,OPUS>
+			! queue2 ! decodebin3 ! audioconvert ! audioresample ! autoaudiosink
+}
+wait

@@ -1,0 +1,12 @@
+{
+	default_bind 0.0.0.0 ::
+	auto_https disable_redirects
+	skip_install_trust
+}
+
+https://bd795ise.local:8443 {
+	tls BD795iSE.crt BD795iSE.key
+	reverse_proxy /whip/* http://localhost:8080
+	root client
+	file_server browse
+}

@@ -8,6 +8,8 @@ async function main() {
 
   const m = navigator.mediaDevices;
 
+  $(".endpoint").value = document.baseURI + "whip/endpoint";
+
   async function displayStream(stream) {
     const mediaStream = useTemplate(".media-stream");
     console.debug("media-stream", mediaStream);
@@ -65,9 +67,13 @@ async function main() {
 
   // Add MediaStream to Connection.
   for (const t of stream.getTracks()) {
-    conn.addTrack(t, stream);
+    const sender = conn.addTrack(t, stream);
+    const param = sender.getParameters();
+    console.info(sender, param);
+    // param.encodings
+    // sender.setParameters(param);
   }
-  console.info("tracks added to RTCPeerConnection", conn.getTransceivers());
+  console.info("tracks added to RTCPeerConnection", conn.getSenders());
 
   // WHIP
   conn.onnegotiationneeded = async (_) => {
@@ -86,13 +92,13 @@ async function main() {
       await conn.setRemoteDescription({ type: "answer", sdp: answer });
     } catch (e) {
       console.debug(e);
-      conn.onnegotiationneeded()
+      conn.onnegotiationneeded();
     }
 
-    console.info("Connection Established", conn.currentRemoteDescription);
+    console.info("Connection Established", conn.currentRemoteDescription.sdp);
   };
 
-   await conn.onnegotiationneeded();
+  await conn.onnegotiationneeded();
 
   // WHIP
   // const fetched = await fetch($(".endpoint").value, {

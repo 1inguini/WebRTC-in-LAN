@@ -15,8 +15,7 @@
   "type": "module",
   "scripts": {
     "build": "esbuild worker.ts --bundle --outdir=dist --platform=neutral --format=esm",
-    "serve": "workerd serve config.capnp",
-    "dev": "execlineb -Pc 'background { npm run build -- --watch } background { npm run serve -- --watch } wait'"
+    "serve": "./serve"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20250704.0",
