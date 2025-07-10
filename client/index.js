@@ -44,10 +44,10 @@ async function main() {
   };
   console.debug("MediaStreams:", streams);
 
-  // Webページ内に表示
-  for await (const s of streams()) {
-    displayStream(s);
-  }
+  // // Webページ内に表示
+  // for await (const s of streams()) {
+  //   displayStream(s);
+  // }
 
   // カメラとマイクからの入力を1つのストリームに
   const stream = new MediaStream();
@@ -56,10 +56,9 @@ async function main() {
       stream.addTrack(t);
     }
   }
+  console.info("Aggregated MediaStream:", stream);
   console.debug("Tracks:", stream.getTracks());
   displayStream(stream);
-
-  console.info("Aggregated MediaStream:", stream);
 
   const conn = new RTCPeerConnection();
   console.info("created RTCPeerConnection", conn);
