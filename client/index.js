@@ -46,20 +46,17 @@ async function main() {
   }
 
   const stream = new MediaStream(
-    (
-      await Promise.all(
-        [...streams].map(async (s) => {
-          try {
-            return (await s).getTracks();
-          } catch (e) {
-            console.debug(e);
-            return [];
-          }
-        }),
-      )
-    ).flat(),
+    (await Array.fromAsync(streams))
+      .map((s) => {
+        try {
+          return s.getTracks();
+        } catch (e) {
+          console.debug(e);
+        }
+      })
+      .flat(),
   );
-  console.info("Aggregated MediaStream:", await stream);
+  console.info("Aggregated MediaStream:", stream);
 
   const conn = new RTCPeerConnection();
   console.info("created RTCPeerConnection", conn);
