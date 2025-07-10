@@ -9,6 +9,7 @@ async function main() {
   const m = navigator.mediaDevices;
   const main = $("main");
 
+  // マイクとカメラを要求
   const streams = [{ audio: {} }, { video: {} }].map(async (constraint) => {
     try {
       const stream = m.getUserMedia(constraint);
@@ -21,6 +22,7 @@ async function main() {
 
   console.debug("MediaStreams:", streams);
 
+  // Webページ内に表示
   for (const promiseS of streams) {
     try {
       const s = await promiseS;
@@ -46,6 +48,27 @@ async function main() {
       console.debug(e);
     }
   }
+
+  const stream = new MediaStream(
+    (
+      await Promise.all(
+        streams.map(async (s) => {
+          try {
+            return (await s).getTracks();
+          } catch (e) {
+            console.info(e);
+            return [];
+          }
+        }),
+      )
+    ).flat(),
+  );
+  console.info("Aggregated MediaStream:", await stream);
+
+  const conn = new RTCPeerConnection();
+  console.info("created RTCPeerConnection", conn);
+
+  // conn.addTrack();
 }
 
 await main();
