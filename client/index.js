@@ -10,53 +10,49 @@ async function main() {
   const main = $("main");
 
   // マイクとカメラを要求
-  const streams = [{ audio: {} }, { video: {} }].map(async (constraint) => {
-    try {
-      const stream = m.getUserMedia(constraint);
-      console.debug("Got MediaStream:", stream, "for", constraint);
-      return stream;
-    } catch (e) {
-      console.debug("Rejected accessing device", e, "for", constraint);
+  const streams = (async function* () {
+    for (const constraint of [{ audio: {} }, { video: {} }]) {
+      try {
+        const stream = await m.getUserMedia(constraint);
+        console.info("Got MediaStream:", stream, "for", constraint);
+        yield stream;
+      } catch (e) {
+        console.info("Accessing device rejected ", e, "for", constraint);
+      }
     }
-  });
-
+  })();
   console.debug("MediaStreams:", streams);
 
   // Webページ内に表示
-  for (const promiseS of streams) {
-    try {
-      const s = await promiseS;
-      const mediaStream = useTemplate(".media-stream");
-      console.debug("media-stream", mediaStream);
-      mediaStream.$(".media-stream.id").innerText = s.id;
-      let hasVideo = false;
-      const mediaTrack = useTemplate(".media-track");
-      for (const t of s.getTracks()) {
-        console.debug("Got MediaStreamTrack:", t);
-        mediaTrack.$(".media-track.label").innerText = t.label;
-        hasVideo ||= t.kind === "video";
-        mediaStream.$("ul.media-tracks").appendChild(mediaTrack);
-      }
-      if (hasVideo) {
-        mediaStream.$("audio").remove();
-      } else {
-        mediaStream.$("video").remove();
-      }
-      mediaStream.$("video, audio").srcObject = s;
-      $("ul.media-streams").appendChild(mediaStream);
-    } catch (e) {
-      console.debug(e);
+  for await (const s of streams) {
+    const mediaStream = useTemplate(".media-stream");
+    console.debug("media-stream", mediaStream);
+    mediaStream.$(".media-stream.id").innerText = s.id;
+    let hasVideo = false;
+    const mediaTrack = useTemplate(".media-track");
+    for (const t of s.getTracks()) {
+      console.debug("Got MediaStreamTrack:", t);
+      mediaTrack.$(".media-track.label").innerText = t.label;
+      hasVideo ||= t.kind === "video";
+      mediaStream.$("ul.media-tracks").appendChild(mediaTrack);
     }
+    if (hasVideo) {
+      mediaStream.$("audio").remove();
+    } else {
+      mediaStream.$("video").remove();
+    }
+    mediaStream.$("video, audio").srcObject = s;
+    $("ul.media-streams").appendChild(mediaStream);
   }
 
   const stream = new MediaStream(
     (
       await Promise.all(
-        streams.map(async (s) => {
+        [...streams].map(async (s) => {
           try {
             return (await s).getTracks();
           } catch (e) {
-            console.info(e);
+            console.debug(e);
             return [];
           }
         }),
