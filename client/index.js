@@ -64,7 +64,10 @@ async function main() {
   const conn = new RTCPeerConnection();
   console.info("created RTCPeerConnection", conn);
 
-  // conn.addTrack();
+  for (const t of stream.getTracks()) {
+    conn.addTrack(t, stream);
+  }
+  console.info("tracks added to RTCPeerConnection", conn.getReceivers());
 }
 
 await main();
