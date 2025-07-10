@@ -63,10 +63,50 @@ async function main() {
   const conn = new RTCPeerConnection();
   console.info("created RTCPeerConnection", conn);
 
+  // Add MediaStream to Connection.
   for (const t of stream.getTracks()) {
     conn.addTrack(t, stream);
   }
-  console.info("tracks added to RTCPeerConnection", conn.getReceivers());
+  console.info("tracks added to RTCPeerConnection", conn.getTransceivers());
+
+  // WHIP
+  conn.onnegotiationneeded = async (_) => {
+    const offer = conn.createOffer();
+    await conn.setLocalDescription(offer);
+    const fetched = await fetch($(".endpoint").value, {
+      method: "POST",
+      body: (await offer).sdp,
+      headers: {
+        "Content-Type": "application/sdp",
+      },
+    });
+    const answer = await fetched.text();
+    console.debug("sdp answer:", answer);
+    try {
+      await conn.setRemoteDescription({ type: "answer", sdp: answer });
+    } catch (e) {
+      console.debug(e);
+      conn.onnegotiationneeded()
+    }
+
+    console.info("Connection Established", conn.currentRemoteDescription);
+  };
+
+   await conn.onnegotiationneeded();
+
+  // WHIP
+  // const fetched = await fetch($(".endpoint").value, {
+  //   method: "POST",
+  //   body: (await offer).sdp,
+  //   headers: {
+  //     "Content-Type": "application/sdp",
+  //   },
+  // });
+  // const answer = await fetched.text();
+  // console.debug("sdp answer:", answer);
+  // await conn.setRemoteDescription({ type: "answer", sdp: answer });
+
+  // console.info("Connection Established", conn.currentRemoteDescription);
 }
 
 await main();
