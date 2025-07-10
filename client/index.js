@@ -45,17 +45,13 @@ async function main() {
     $("ul.media-streams").appendChild(mediaStream);
   }
 
-  const stream = new MediaStream(
-    (await Array.fromAsync(streams))
-      .map((s) => {
-        try {
-          return s.getTracks();
-        } catch (e) {
-          console.debug(e);
-        }
-      })
-      .flat(),
-  );
+  const stream = new MediaStream();
+  for await (const s of streams) {
+    for (const t of s.getTracks()) {
+      stream.addTrack(t);
+    }
+  }
+
   console.info("Aggregated MediaStream:", stream);
 
   const conn = new RTCPeerConnection();
