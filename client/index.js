@@ -8,8 +8,6 @@ async function main() {
 
   const m = navigator.mediaDevices;
 
-  $(".endpoint").value = document.baseURI + "whip/endpoint";
-
   async function displayStream(stream) {
     const mediaStream = useTemplate(".media-stream");
     console.debug("media-stream", mediaStream);
