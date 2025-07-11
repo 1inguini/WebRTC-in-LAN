@@ -34,10 +34,15 @@ async function main() {
 
   // マイクとカメラを要求
   const streams = async function* () {
-    for (const constraint of [{ audio: {} }, { video: {} }]) {
+    for (const constraint of [{ audio: true } /* { video: true } */]) {
       try {
         const stream = await m.getUserMedia(constraint);
-        console.info("Got MediaStream:", stream, "for", constraint);
+        console.info(
+          "Got MediaStream:",
+          stream.getTracks().map((e) => e.getSettings()),
+          "for",
+          constraint,
+        );
         yield stream;
       } catch (e) {
         console.info("Accessing device rejected ", e, "for", constraint);
@@ -59,10 +64,14 @@ async function main() {
     }
   }
   console.info("Aggregated MediaStream:", stream);
-  console.debug("Tracks:", stream.getTracks());
+  console.debug(
+    "Tracks:",
+    stream.getTracks().map((t) => t.getSettings()),
+  );
   displayStream(stream);
 
   const conn = new RTCPeerConnection();
+  window.conn = conn;
   console.info("created RTCPeerConnection", conn);
 
   // Add MediaStream to Connection.
@@ -100,19 +109,6 @@ async function main() {
 
   await conn.onnegotiationneeded();
 
-  // WHIP
-  // const fetched = await fetch($(".endpoint").value, {
-  //   method: "POST",
-  //   body: (await offer).sdp,
-  //   headers: {
-  //     "Content-Type": "application/sdp",
-  //   },
-  // });
-  // const answer = await fetched.text();
-  // console.debug("sdp answer:", answer);
-  // await conn.setRemoteDescription({ type: "answer", sdp: answer });
-
-  // console.info("Connection Established", conn.currentRemoteDescription);
 }
 
 await main();
