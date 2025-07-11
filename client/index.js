@@ -34,7 +34,18 @@ async function main() {
 
   // マイクとカメラを要求
   const streams = async function* () {
-    for (const constraint of [{ audio: true } /* { video: true } */]) {
+    for (const constraint of [
+      // 機能を無効化してレイテンシを上げる
+      {
+        audio: {
+          autoGainControl: false,
+          channelCount: { exact: 1 },
+          echoCancellation: false,
+          noiseSuppression: false,
+          sampleRate: { min: 48000 },
+        },
+      } /* { video: true } */,
+    ]) {
       try {
         const stream = await m.getUserMedia(constraint);
         console.info(
@@ -64,10 +75,10 @@ async function main() {
     }
   }
   console.info("Aggregated MediaStream:", stream);
-  console.debug(
-    "Tracks:",
-    stream.getTracks().map((t) => t.getSettings()),
-  );
+  // console.debug(
+  //   "Tracks:",
+  //   stream.getTracks().map((t) => t.getSettings()),
+  // );
   displayStream(stream);
 
   const conn = new RTCPeerConnection();
@@ -108,7 +119,6 @@ async function main() {
   };
 
   await conn.onnegotiationneeded();
-
 }
 
 await main();

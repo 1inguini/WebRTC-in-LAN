@@ -4,7 +4,7 @@ background {
 	caddy run
 }
 background {
-	loopwhilex
+	loopwhilex -x 0
 		gst-launch-1.0 -m
 			whipserversrc stun-server=stun:// signaller::host-addr=http://localhost:8080
 			: queue2 : decodebin3 : autoaudiosink
